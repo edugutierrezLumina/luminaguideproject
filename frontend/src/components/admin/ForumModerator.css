@@ -1,0 +1,180 @@
+.forum-moderator {
+  max-width: 1200px;
+}
+
+.manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.manager-header h1 {
+  font-size: 28px;
+  color: #333;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tabs button {
+  padding: 12px 24px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.tabs button:hover {
+  background: #e0e0e0;
+}
+
+.tabs button.active {
+  background: linear-gradient(135deg, #d094ea 0%, #b86dd5 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(208, 148, 234, 0.3);
+}
+
+.forum-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.forum-post-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-left: 4px solid #d094ea;
+}
+
+.forum-post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px rgba(208, 148, 234, 0.2);
+}
+
+.forum-post-card .post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.forum-post-card .post-header h4 {
+  margin: 0 0 5px 0;
+  color: #d094ea;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.forum-post-card .post-header small {
+  color: #999;
+  font-size: 12px;
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.post-content {
+  margin-bottom: 15px;
+}
+
+.post-content p {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.forum-post-card .post-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-approve {
+  flex: 1;
+  padding: 10px;
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-approve:hover {
+  background: linear-gradient(135deg, #229954 0%, #1e8449 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+}
+
+.btn-reject {
+  flex: 1;
+  padding: 10px;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.btn-reject:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+.btn-delete {
+  flex: 1;
+  padding: 10px;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.btn-delete:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+.loading,
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}

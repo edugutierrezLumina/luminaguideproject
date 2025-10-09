@@ -1,0 +1,219 @@
+.therapist-directory {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+/* Hero Section */
+.directory-hero {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, rgba(208, 148, 234, 0.1) 0%, rgba(184, 109, 213, 0.05) 100%);
+  border-radius: 20px;
+}
+
+.directory-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #5a3d6b;
+  margin-bottom: 15px;
+  font-family: 'Merriweather', serif;
+}
+
+.directory-hero p {
+  font-size: 1.25rem;
+  color: #8b5ba5;
+  font-weight: 500;
+}
+
+/* Filters Section */
+.filters-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 20px rgba(208, 148, 234, 0.15);
+}
+
+.filters-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #5a3d6b;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group label .icon {
+  font-size: 1.1rem;
+}
+
+.filter-group select {
+  padding: 12px 16px;
+  border: 2px solid #e8d4f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #5a3d6b;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.filter-group select:hover {
+  border-color: #d094ea;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #d094ea;
+  box-shadow: 0 0 0 3px rgba(208, 148, 234, 0.1);
+}
+
+.clear-filters-btn {
+  padding: 12px 24px;
+  background: transparent;
+  color: #d094ea;
+  border: 2px solid #d094ea;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.95rem;
+}
+
+.clear-filters-btn:hover {
+  background: #d094ea;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(208, 148, 234, 0.3);
+}
+
+.results-summary {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 2px solid #e8d4f0;
+}
+
+.results-summary p {
+  font-size: 1.1rem;
+  color: #8b5ba5;
+}
+
+.results-summary strong {
+  color: #d094ea;
+  font-size: 1.3rem;
+}
+
+/* Therapists Grid */
+.therapists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+/* Loading */
+.loading-container {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e8d4f0;
+  border-top-color: #d094ea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-container p {
+  font-size: 1.1rem;
+  color: #8b5ba5;
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 80px 20px;
+  background: rgba(208, 148, 234, 0.05);
+  border-radius: 16px;
+  margin-top: 40px;
+}
+
+.no-results-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.no-results h3 {
+  font-size: 1.8rem;
+  color: #5a3d6b;
+  margin-bottom: 10px;
+  font-family: 'Merriweather', serif;
+}
+
+.no-results p {
+  font-size: 1.1rem;
+  color: #8b5ba5;
+  margin-bottom: 30px;
+}
+
+.try-again-btn {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #d094ea 0%, #b86dd5 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.try-again-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(208, 148, 234, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .directory-hero h1 {
+    font-size: 2rem;
+  }
+
+  .directory-hero p {
+    font-size: 1rem;
+  }
+
+  .filters-container {
+    grid-template-columns: 1fr;
+  }
+
+  .therapists-grid {
+    grid-template-columns: 1fr;
+  }
+}

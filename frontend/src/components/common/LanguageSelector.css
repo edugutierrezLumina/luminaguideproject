@@ -1,0 +1,52 @@
+.language-selector {
+  display: flex;
+  gap: 6px;
+  background: rgba(208, 148, 234, 0.1);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #e8d4f0;
+}
+
+.language-selector button {
+  padding: 8px 16px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #8b5ba5;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Merriweather', serif;
+}
+
+.language-selector button:hover {
+  background: rgba(208, 148, 234, 0.15);
+  color: #d094ea;
+}
+
+.language-selector button.active {
+  background: linear-gradient(135deg, #d094ea 0%, #b86dd5 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(208, 148, 234, 0.3);
+}
+
+/* Ajustes para el header */
+.header-actions .language-selector {
+  background: rgba(208, 148, 234, 0.1);
+  border: 1px solid #e8d4f0;
+}
+
+.header-actions .language-selector button {
+  color: #8b5ba5;
+  font-size: 13px;
+}
+
+.header-actions .language-selector button.active {
+  background: linear-gradient(135deg, #d094ea 0%, #b86dd5 100%);
+  color: white;
+}
