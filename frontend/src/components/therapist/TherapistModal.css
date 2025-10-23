@@ -239,30 +239,32 @@
   margin: 0;
 }
 
+/* ✅ ACTUALIZADO - Botón más corto */
 .modal-actions {
   text-align: center;
-  padding: 30px 0 10px;
+  padding: 20px 40px; /* Reducido padding */
+  background: #fafafa; /* Agregado fondo para continuidad visual */
 }
 
 .contact-btn {
-  padding: 16px 40px;
+  padding: 12px 24px; /* ✅ REDUCIDO - Antes era 16px 40px */
   background: linear-gradient(135deg, #d094ea 0%, #b86dd5 100%);
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px; /* Reducido de 12px */
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem; /* ✅ REDUCIDO - Antes era 1.1rem */
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Quicksand', sans-serif;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px; /* Reducido de 10px */
   box-shadow: 0 4px 15px rgba(208, 148, 234, 0.3);
 }
 
 .contact-btn .icon {
-  font-size: 1.3rem;
+  font-size: 1.1rem; /* ✅ REDUCIDO - Antes era 1.3rem */
 }
 
 .contact-btn:hover {
@@ -309,5 +311,14 @@
 
   .info-grid {
     grid-template-columns: 1fr;
+  }
+
+  .modal-actions {
+    padding: 20px;
+  }
+
+  .contact-btn {
+    padding: 10px 20px; /* Aún más pequeño en móvil */
+    font-size: 0.95rem;
   }
 }

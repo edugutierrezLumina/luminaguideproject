@@ -3,6 +3,7 @@ import {
   createBlogPost,
   getAllBlogPosts,
   getPublishedBlogPosts,
+  getBlogPostById, // ✅ AGREGAR si no existe
   updateBlogPost,
   deleteBlogPost
 } from '../controllers/blogController';
@@ -12,10 +13,11 @@ import { upload } from '../middleware/upload';
 
 const router = express.Router();
 
-// Rutas públicas
-router.get('/published', getPublishedBlogPosts);
 
-// Rutas protegidas (admin)
+router.get('/published', getPublishedBlogPosts);
+router.get('/published/:id', getBlogPostById); // ✅ NUEVA - para ver post individual
+
+
 router.post('/', authenticate, authorize('admin'), upload.array('files', 10), createBlogPost);
 router.get('/', authenticate, authorize('admin'), getAllBlogPosts);
 router.put('/:id', authenticate, authorize('admin'), updateBlogPost);

@@ -2,12 +2,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import Header from './components/common/Header'; // ✅ IMPORTAR HEADER
-import Footer from './components/common/Footer'; // ✅ IMPORTAR FOOTER
+import Header from './components/common/Header';
+import Footer from './components/common/Footer';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import Home from './pages/Home';
 import TherapistDirectory from './components/therapist/TherapistDirectory';
+import Blog from './pages/Blog'; // ✅ IMPORTAR BLOG
 import './App.css';
 
 function App() {
@@ -16,16 +17,15 @@ function App() {
       <AuthProvider>
         <Router>
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-            {/* ✅ HEADER GLOBAL */}
             <Header />
             
-            {/* ✅ MAIN CONTENT */}
             <main style={{ flex: 1 }}>
               <Routes>
                 {/* Rutas Públicas */}
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/therapists" element={<TherapistDirectory />} />
+                <Route path="/blog" element={<Blog />} /> {/* ✅ NUEVA RUTA */}
                 
                 {/* Rutas Protegidas */}
                 <Route
@@ -42,7 +42,6 @@ function App() {
               </Routes>
             </main>
             
-            {/* ✅ FOOTER GLOBAL */}
             <Footer />
           </div>
         </Router>

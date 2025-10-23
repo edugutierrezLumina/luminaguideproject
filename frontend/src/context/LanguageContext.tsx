@@ -95,7 +95,7 @@ const translations: TranslationDictionary = {
     'nav.home': 'Inicio',
     'nav.directory': 'Directorio',
     'nav.blog': 'Blog',
-    'nav.faq': 'FAQ',
+    'nav.forum': 'Foro',
     'nav.login': 'Login',
   },
   en: {
@@ -171,7 +171,7 @@ const translations: TranslationDictionary = {
     'nav.home': 'Home',
     'nav.directory': 'Directory',
     'nav.blog': 'Blog',
-    'nav.faq': 'FAQ',
+    'nav.forum': 'Forum',
     'nav.login': 'Login',
   },
 };
