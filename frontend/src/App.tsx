@@ -8,8 +8,9 @@ import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import Home from './pages/Home';
 import TherapistDirectory from './components/therapist/TherapistDirectory';
-import Blog from './pages/Blog'; // ✅ IMPORTAR BLOG
+import Blog from './pages/Blog'; 
 import './App.css';
+import Forum from './pages/Forum'
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/therapists" element={<TherapistDirectory />} />
-                <Route path="/blog" element={<Blog />} /> {/* ✅ NUEVA RUTA */}
+                <Route path="/blog" element={<Blog />} /> 
+                <Route path="/forum" element={<Forum />} />
                 
                 {/* Rutas Protegidas */}
                 <Route

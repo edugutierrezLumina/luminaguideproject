@@ -4,13 +4,19 @@
   font-family: 'Merriweather', serif;
 }
 
-/* Hero Slider Section */
+
+/* ========================
+   HERO SLIDER SECTION
+   ======================== */
 .hero-slider {
   background: linear-gradient(180deg, #ffffff 0%, #f8f4fb 100%);
   padding: 20px 0 60px 0;
 }
 
-/* Mission & Vision Section */
+
+/* ========================
+   MISSION & VISION SECTION
+   ======================== */
 .mission-vision-section {
   padding: 80px 20px;
   background: white;
@@ -56,8 +62,24 @@
 
 .mission-card .icon,
 .vision-card .icon {
-  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 20px;
+}
+
+/* NUEVO - Estilos para Heroicons en Mission & Vision */
+.mission-vision-icon {
+  width: 48px;
+  height: 48px;
+  color: #d094ea;
+  stroke-width: 1.5;
+  transition: transform 0.3s ease;
+}
+
+.mission-card:hover .mission-vision-icon,
+.vision-card:hover .mission-vision-icon {
+  transform: scale(1.1) rotate(-5deg);
 }
 
 .mission-card h3,
@@ -78,7 +100,10 @@
   font-weight: 300;
 }
 
-/* Navigation Cards Section */
+
+/* ========================
+   NAVIGATION CARDS SECTION
+   ======================== */
 .navigation-cards-section {
   padding: 80px 20px;
   background: linear-gradient(180deg, #f8f4fb 0%, #ffffff 100%);
@@ -103,6 +128,7 @@
   position: relative;
   overflow: hidden;
   border: 2px solid transparent;
+  cursor: pointer; /* NUEVO - Hacer clickeable */
 }
 
 .nav-card::before {
@@ -128,13 +154,44 @@
 }
 
 .card-icon {
-  font-size: 56px;
+  display: flex; /* NUEVO - Centrar iconos */
+  align-items: center;
+  justify-content: center;
   margin-bottom: 20px;
+  color: #d094ea;
   transition: transform 0.3s ease;
+}
+
+/* NUEVO - Estilos para Heroicons en Navigation Cards */
+.nav-card-icon {
+  width: 56px;
+  height: 56px;
+  color: #d094ea;
+  stroke-width: 1.5;
+  transition: all 0.3s ease;
 }
 
 .nav-card:hover .card-icon {
   transform: scale(1.1);
+}
+
+.nav-card:hover .nav-card-icon {
+  transform: scale(1.15) rotate(5deg);
+  filter: drop-shadow(0 4px 12px rgba(208, 148, 234, 0.4));
+}
+
+/* NUEVO - Animación de rebote para los iconos */
+@keyframes iconBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.nav-card:hover .card-icon {
+  animation: iconBounce 0.6s ease;
 }
 
 .nav-card h4 {
@@ -165,7 +222,10 @@
   transform: translateX(10px);
 }
 
-/* Responsivo */
+
+/* ========================
+   RESPONSIVO
+   ======================== */
 @media (max-width: 1024px) {
   .mission-vision-container {
     grid-template-columns: 1fr;
@@ -192,6 +252,17 @@
   .mission-card h3,
   .vision-card h3 {
     font-size: 26px;
+  }
+
+  /* Ajustar tamaño de iconos en móviles */
+  .mission-vision-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-card-icon {
+    width: 48px;
+    height: 48px;
   }
 
   .nav-card {

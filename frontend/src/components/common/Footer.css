@@ -1,3 +1,7 @@
+/* ========================
+   MAIN FOOTER
+   ======================== */
+
 .main-footer {
   background: #b078c2; /* Versión mate y suave de #d094ea */
   padding: 25px 30px;
@@ -14,7 +18,11 @@
   gap: 15px;
 }
 
-/* Logo footer - Rectángulo horizontal 300x110 */
+
+/* ========================
+   FOOTER LOGO
+   ======================== */
+
 .footer-logo {
   display: flex;
   align-items: center;
@@ -33,7 +41,11 @@
   opacity: 0.85;
 }
 
-/* Terms and conditions Link */
+
+/* ========================
+   TERMS AND CONDITIONS LINK
+   ======================== */
+
 .terms-link {
   font-family: 'Merriweather', serif;
   font-weight: 500;
@@ -51,44 +63,82 @@
   text-decoration: none;
 }
 
-/* Container de iconos sociales */
+
+/* ========================
+   SOCIAL ICONS - VERSIÓN SUAVE
+   ======================== */
+
 .social-icons {
   display: flex;
   gap: 14px;
+  align-items: center;
 }
 
-/* Botones redondos sociales */
 .social-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 50%;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.09);
+  background: rgba(255, 255, 255, 0.15); /* Fondo semitransparente */
+  backdrop-filter: blur(10px); /* Efecto glassmorphism */
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
 }
 
-.social-btn img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  filter: brightness(85%);
-  transition: filter 0.3s ease;
+.social-icon {
+  width: 22px;
+  height: 22px;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.9); /* Íconos blancos suaves */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
+/* Hover: Revelar colores originales suavemente */
 .social-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
-.social-btn:hover img {
-  filter: brightness(120%);
+.social-btn.tiktok:hover {
+  background: linear-gradient(135deg, rgba(0, 242, 234, 0.25) 0%, rgba(255, 0, 80, 0.25) 100%);
 }
 
-/* Responsive */
+.social-btn.tiktok:hover .social-icon {
+  color: #00f2ea;
+}
+
+.social-btn.facebook:hover {
+  background: rgba(24, 119, 242, 0.3);
+}
+
+.social-btn.facebook:hover .social-icon {
+  color: #1877f2;
+}
+
+.social-btn.instagram:hover {
+  background: linear-gradient(135deg, rgba(245, 133, 41, 0.25) 0%, rgba(221, 42, 123, 0.25) 50%, rgba(129, 52, 175, 0.25) 100%);
+}
+
+.social-btn.instagram:hover .social-icon {
+  color: #f58529;
+}
+
+.social-btn:hover .social-icon {
+  transform: scale(1.15) rotate(5deg);
+}
+/* ========================
+   RESPONSIVE
+   ======================== */
+
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
@@ -98,5 +148,40 @@
   .footer-logo-img {
     width: 250px;
     height: 92px;
+  }
+
+  .social-icons {
+    gap: 12px;
+  }
+
+  .social-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .social-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-logo-img {
+    width: 200px;
+    height: 74px;
+  }
+
+  .terms-link {
+    font-size: 14px;
+  }
+
+  .social-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .social-icon {
+    width: 18px;
+    height: 18px;
   }
 }

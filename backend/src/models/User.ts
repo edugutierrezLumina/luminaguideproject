@@ -5,6 +5,8 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: 'admin' | 'therapist' | 'client';
+  firstName: string;
+  lastName: string;
   createdAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
@@ -26,6 +28,16 @@ const UserSchema: Schema = new Schema({
     type: String,
     enum: ['admin', 'therapist', 'client'],
     default: 'client'
+  },
+  firstName: {
+    type: String,
+    required: [true, 'El nombre es requerido'],
+    trim: true
+  },
+  lastName: {
+    type: String,
+    required: [true, 'El apellido es requerido'],
+    trim: true
   },
   createdAt: {
     type: Date,

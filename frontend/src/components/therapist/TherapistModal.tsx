@@ -1,4 +1,13 @@
+// frontend/src/components/therapist/TherapistModal.tsx
 import React, { useEffect, useState } from 'react';
+import { 
+  XMarkIcon,
+  EnvelopeIcon,
+  MapPinIcon,
+  ChatBubbleLeftRightIcon,
+  UserIcon,
+  SparklesIcon
+} from '@heroicons/react/24/outline';
 import ContactModal from './ContactModal';
 import './TherapistModal.css';
 
@@ -29,10 +38,15 @@ const TherapistModal: React.FC<TherapistModalProps> = ({ therapist, onClose }) =
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
+    
+    // ✅ DEBUG
+    console.log('🔍 Therapist:', therapist);
+    console.log('📸 Profile Image:', therapist.profileImage);
+    
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, []);
+  }, [therapist]);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -57,10 +71,32 @@ const TherapistModal: React.FC<TherapistModalProps> = ({ therapist, onClose }) =
     const lastName = therapist.userId?.lastName;
     
     if (firstName === 'Therapist' || !firstName || !lastName) {
-      return therapist.userId?.email || 'Terapeuta';
+      return therapist.userId?.email || 'Therapist';
     }
     
     return `${firstName} ${lastName}`;
+  };
+
+  const getImageUrl = () => {
+    if (!therapist.profileImage) {
+      console.log('❌ No profile image');
+      return null;
+    }
+
+    if (therapist.profileImage.startsWith('http')) {
+      console.log('✅ Full URL:', therapist.profileImage);
+      return therapist.profileImage;
+    }
+
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    const imagePath = therapist.profileImage.startsWith('/') 
+      ? therapist.profileImage 
+      : `/${therapist.profileImage}`;
+    
+    const fullUrl = `${apiUrl}${imagePath}`;
+    console.log('🔗 Built URL:', fullUrl);
+    
+    return fullUrl;
   };
 
   const calculateAge = () => {
@@ -82,24 +118,35 @@ const TherapistModal: React.FC<TherapistModalProps> = ({ therapist, onClose }) =
     setShowContactModal(false);
   };
 
+  const imageUrl = getImageUrl();
+
   return (
     <>
       <div className="modal-backdrop" onClick={handleBackdropClick}>
         <div className="modal-container">
+          
           <button className="modal-close-btn" onClick={onClose}>
-            ✕
+            <XMarkIcon className="close-icon" />
           </button>
 
           <div className="modal-content">
+            
+            {/* Header */}
             <div className="modal-header">
               <div className="modal-profile-section">
+                
                 <div className="modal-avatar">
-                  {therapist.profileImage ? (
+                  {imageUrl ? (
                     <img 
-                      src={therapist.profileImage} 
+                      src={imageUrl} 
                       alt={getDisplayName()}
+                      onError={(e) => {
+                        console.error('❌ Image failed to load:', imageUrl);
+                        e.currentTarget.style.display = 'none';
+                      }}
                     />
-                  ) : (
+                  ) : null}
+                  {(!imageUrl || !therapist.profileImage) && (
                     <div className="avatar-placeholder-large">
                       {getInitials()}
                     </div>
@@ -107,82 +154,106 @@ const TherapistModal: React.FC<TherapistModalProps> = ({ therapist, onClose }) =
                 </div>
 
                 <div className="modal-profile-info">
-                  <h2 className="modal-name">
-                    {getDisplayName()}
-                  </h2>
+                  <h2 className="modal-name">{getDisplayName()}</h2>
                   <p className="modal-specialty">{therapist.specialty}</p>
                   <div className="modal-location">
-                    <i className="icon">📍</i>
+                    <MapPinIcon className="location-icon" />
                     <span>{therapist.location}</span>
                   </div>
                 </div>
+
               </div>
             </div>
 
+            {/* Contact Button */}
             <div className="modal-actions">
               <button className="contact-btn" onClick={handleContactClick}>
-                <i className="icon">✉️</i>
-                Contactar
+                <EnvelopeIcon className="btn-icon" />
+                Contact
               </button>
             </div>
 
+            {/* Body */}
             <div className="modal-body">
+              
               <div className="profile-section">
-                <h3>Sobre mí</h3>
+                <h3>About Me</h3>
                 <p className="bio-text">
-                  {therapist.bio || 'Este terapeuta aún no ha agregado una descripción.'}
+                  {therapist.bio || 'This therapist has not added a description yet.'}
                 </p>
               </div>
 
               <div className="profile-section">
-                <h3>Información Profesional</h3>
+                <h3>Professional Information</h3>
                 <div className="info-grid">
+                  
+                  {/* Specialty */}
                   <div className="info-card">
-                    <div className="info-icon">🌿</div>
-                    <div>
-                      <p className="info-label">Especialidad</p>
+                    <div className="info-icon">
+                      <SparklesIcon className="card-icon-heroic" />
+                    </div>
+                    <div className="info-text-container">
+                      <p className="info-label">Specialty</p>
                       <p className="info-value">{therapist.specialty}</p>
                     </div>
                   </div>
 
+                  {/* Location */}
                   <div className="info-card">
-                    <div className="info-icon">📍</div>
-                    <div>
-                      <p className="info-label">Ubicación</p>
+                    <div className="info-icon">
+                      <MapPinIcon className="card-icon-heroic" />
+                    </div>
+                    <div className="info-text-container">
+                      <p className="info-label">Location</p>
                       <p className="info-value">{therapist.location}</p>
                     </div>
                   </div>
 
+                  {/* Languages - ✅ COMO LISTA */}
                   <div className="info-card">
-                    <div className="info-icon">💬</div>
-                    <div>
-                      <p className="info-label">Idiomas</p>
-                      <p className="info-value">{therapist.language.join(', ')}</p>
+                    <div className="info-icon">
+                      <ChatBubbleLeftRightIcon className="card-icon-heroic" />
+                    </div>
+                    <div className="info-text-container">
+                      <p className="info-label">Languages</p>
+                      {therapist.language.length > 0 ? (
+                        <ul className="language-list">
+                          {therapist.language.map((lang, index) => (
+                            <li key={index} className="language-item">{lang}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="info-value">Not specified</p>
+                      )}
                     </div>
                   </div>
 
+                  {/* Age */}
                   <div className="info-card">
-                    <div className="info-icon">👤</div>
-                    <div>
-                      <p className="info-label">Edad</p>
-                      <p className="info-value">{calculateAge()} años</p>
+                    <div className="info-icon">
+                      <UserIcon className="card-icon-heroic" />
+                    </div>
+                    <div className="info-text-container">
+                      <p className="info-label">Age</p>
+                      <p className="info-value">{calculateAge()} years</p>
                     </div>
                   </div>
+
                 </div>
               </div>
 
               <div className="profile-section">
-                <h3>Descripción de la Especialidad</h3>
+                <h3>Specialty Description</h3>
                 <div className="specialty-description">
-                  <p>Especialista en {therapist.specialty.toLowerCase()} con experiencia comprobada en el campo.</p>
+                  <p>Specialist in {therapist.specialty.toLowerCase()} with proven experience in the field.</p>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modal de Contacto */}
       {showContactModal && (
         <ContactModal 
           therapistName={getDisplayName()}

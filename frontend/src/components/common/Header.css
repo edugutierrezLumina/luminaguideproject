@@ -1,3 +1,5 @@
+/* frontend/src/components/common/Header.css */
+
 .main-header {
   background: white;
   box-shadow: 0 2px 12px rgba(208, 148, 234, 0.15);
@@ -131,6 +133,95 @@
   transform: translateY(-2px);
 }
 
+/* USER MENU - CUANDO ESTÁ LOGUEADO (OPTIMIZADO) */
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px;
+  background: rgba(208, 148, 234, 0.06);
+  border-radius: 10px;
+  border: 1.5px solid #e8d4f0;
+  transition: all 0.3s ease;
+}
+
+.user-menu:hover {
+  background: rgba(208, 148, 234, 0.1);
+  border-color: #d094ea;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.user-email {
+  font-size: 14px;
+  font-weight: 700;
+  color: #5a3d6b;
+  font-family: 'Merriweather', serif;
+  letter-spacing: 0.3px;
+}
+
+.user-role-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, #d094ea 0%, #b86dd5 100%);
+  color: white;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 2px 6px rgba(208, 148, 234, 0.25);
+}
+
+.user-actions-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.admin-panel-btn,
+.logout-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 7px;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Quicksand', sans-serif;
+  white-space: nowrap;
+}
+
+.admin-panel-btn {
+  background: linear-gradient(135deg, #d094ea 0%, #b86dd5 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(208, 148, 234, 0.25);
+}
+
+.admin-panel-btn:hover {
+  background: linear-gradient(135deg, #b86dd5 0%, #a055c2 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(208, 148, 234, 0.35);
+}
+
+.logout-btn {
+  background: white;
+  color: #e74c3c;
+  border: 1.5px solid #e74c3c;
+}
+
+.logout-btn:hover {
+  background: #e74c3c;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.25);
+}
+
 /* Actualizar LanguageSelector para el header */
 .header-actions .language-selector {
   background: rgba(208, 148, 234, 0.1);
@@ -148,7 +239,8 @@
   color: white;
 }
 
-/* Responsivo */
+/* RESPONSIVE */
+
 @media (max-width: 1200px) {
   .header-container {
     grid-template-columns: auto auto 1fr;
@@ -174,6 +266,16 @@
   .nav-link {
     padding: 10px 18px;
     font-size: 14px;
+  }
+
+  .user-email {
+    font-size: 13px;
+  }
+
+  .admin-panel-btn,
+  .logout-btn {
+    padding: 5px 10px;
+    font-size: 10px;
   }
 }
 
@@ -248,5 +350,35 @@
   .logo-square {
     height: 60px;
     width: 60px;
+  }
+
+  /* User menu responsive - más compacto */
+  .user-menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  .user-info {
+    align-items: flex-start;
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .user-email {
+    font-size: 12px;
+  }
+
+  .user-actions-buttons {
+    display: flex;
+    gap: 6px;
+  }
+
+  .admin-panel-btn,
+  .logout-btn {
+    padding: 6px 10px;
+    font-size: 10px;
   }
 }

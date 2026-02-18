@@ -1,9 +1,9 @@
 .blog-page-reddit {
   min-height: 100vh;
-  background: #DAE0E6;
+  background: #ffffff;
 }
 
-/* Hero Section - Mantener igual */
+/* ─── Hero Section ─────────────────────────────────────── */
 .blog-hero {
   background: linear-gradient(135deg, #d094ea 0%, #b86dd5 100%);
   padding: 80px 20px;
@@ -24,18 +24,23 @@
   opacity: 0.95;
 }
 
+/* ─── FAQ Toggle Button ─────────────────────────────────── */
 .faq-toggle-btn {
-  padding: 14px 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
   background: white;
   color: #d094ea;
   border: none;
   border-radius: 10px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Quicksand', sans-serif;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
 }
 
 .faq-toggle-btn:hover {
@@ -43,7 +48,22 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* FAQ Section - Mantener igual */
+/* Círculo con ✕ cuando el FAQ está abierto */
+.faq-close-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #d094ea;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ─── FAQ Section ───────────────────────────────────────── */
 .faq-section {
   max-width: 900px;
   margin: -40px auto 60px;
@@ -134,7 +154,7 @@
   }
 }
 
-/* Blog Feed - Estilo Reddit */
+/* ─── Blog Feed ─────────────────────────────────────────── */
 .blog-feed {
   max-width: 800px;
   margin: 0 auto;
@@ -147,7 +167,7 @@
   gap: 16px;
 }
 
-/* Reddit Card */
+/* ─── Reddit Card ───────────────────────────────────────── */
 .reddit-card {
   background: white;
   border: 1px solid #ccc;
@@ -222,7 +242,7 @@
   word-wrap: break-word;
 }
 
-/* Media Container */
+/* ─── Media ─────────────────────────────────────────────── */
 .media-container {
   margin-top: 16px;
 }
@@ -265,7 +285,7 @@
   transform: scale(1.05);
 }
 
-/* Video Player */
+/* ─── Video ─────────────────────────────────────────────── */
 .video-container {
   margin-top: 16px;
 }
@@ -285,7 +305,7 @@
   display: block;
 }
 
-/* Card Footer */
+/* ─── Card Footer ───────────────────────────────────────── */
 .card-footer {
   padding: 8px 16px 12px;
   border-top: 1px solid #f0f0f0;
@@ -323,7 +343,7 @@
   font-size: 1.1rem;
 }
 
-/* Loading */
+/* ─── Loading ───────────────────────────────────────────── */
 .loading-container {
   text-align: center;
   padding: 80px 20px;
@@ -343,7 +363,7 @@
   to { transform: rotate(360deg); }
 }
 
-/* No Posts */
+/* ─── No Posts ──────────────────────────────────────────── */
 .no-posts {
   text-align: center;
   padding: 80px 20px;
@@ -369,7 +389,7 @@
   color: #8b5ba5;
 }
 
-/* Responsive */
+/* ─── Responsive ────────────────────────────────────────── */
 @media (max-width: 768px) {
   .blog-hero h1 {
     font-size: 2rem;
@@ -377,6 +397,11 @@
 
   .blog-hero p {
     font-size: 1.1rem;
+  }
+
+  .faq-toggle-btn {
+    font-size: 0.85rem;
+    padding: 9px 18px;
   }
 
   .blog-feed {

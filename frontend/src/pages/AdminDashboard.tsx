@@ -1,5 +1,12 @@
+// frontend/src/pages/AdminDashboard.tsx
 import React, { useState } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { 
+  UserGroupIcon, 
+  DocumentTextIcon, 
+  ChatBubbleLeftRightIcon,
+  ArrowRightOnRectangleIcon
+} from '@heroicons/react/24/outline';
 import { useAuth } from '../context/AuthContext';
 import TherapistManager from '../components/admin/TherapistManager';
 import BlogManager from '../components/admin/BlogManager';
@@ -30,21 +37,24 @@ const AdminDashboard: React.FC = () => {
             className={activeTab === 'therapists' ? 'active' : ''}
             onClick={() => setActiveTab('therapists')}
           >
-            👨‍⚕️ Terapeutas
+            <UserGroupIcon className="nav-icon" />
+            Terapeutas
           </Link>
           <Link
             to="/admin/blog"
             className={activeTab === 'blog' ? 'active' : ''}
             onClick={() => setActiveTab('blog')}
           >
-            📝 Blog
+            <DocumentTextIcon className="nav-icon" />
+            Blog
           </Link>
           <Link
             to="/admin/forum"
             className={activeTab === 'forum' ? 'active' : ''}
             onClick={() => setActiveTab('forum')}
           >
-            💬 Foro
+            <ChatBubbleLeftRightIcon className="nav-icon" />
+            Foro
           </Link>
         </nav>
 
@@ -54,6 +64,7 @@ const AdminDashboard: React.FC = () => {
             <span className="user-role">{user?.role}</span>
           </div>
           <button onClick={handleLogout} className="logout-btn">
+            <ArrowRightOnRectangleIcon className="logout-icon" />
             Cerrar Sesión
           </button>
         </div>

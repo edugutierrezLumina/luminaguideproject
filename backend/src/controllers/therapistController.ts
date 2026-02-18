@@ -1,35 +1,86 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
-import Therapist from '../models/Therapist';
+import Therapist, { 
+  CATEGORIES, 
+  SPECIALTIES_BY_CATEGORY, 
+  ALL_SPECIALTIES,
+  SESSION_TYPES,
+  FOCUS_AREAS
+} from '../models/Therapist';
 import User from '../models/User';
 
 // ============================================
-// RUTAS PÚBLICAS (Sin autenticación)
+// Obtener filtros disponibles
+// ============================================
+export const getAvailableFilters = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const customSpecialties = await Therapist.distinct('specialty');
+    const customCategories = await Therapist.distinct('category');
+    
+    const allSpecialties = [...new Set([...ALL_SPECIALTIES, ...customSpecialties])].sort();
+    const allCategories = [...new Set([...CATEGORIES, ...customCategories.filter(c => c)])].sort();
+    
+    res.status(200).json({
+      success: true,
+      filters: {
+        categories: allCategories,
+        specialtiesByCategory: SPECIALTIES_BY_CATEGORY,
+        allSpecialties,
+        locations: await Therapist.distinct('location'),
+        languages: await Therapist.distinct('language').then(langs => langs.flat()),
+        locationTypes: ['Online', 'In-person', 'Hybrid'],
+        sessionTypes: SESSION_TYPES,
+        focusAreas: FOCUS_AREAS
+      }
+    });
+  } catch (error) {
+    console.error('Error getting filters:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener filtros'
+    });
+  }
+};
+
+// ============================================
+// RUTAS PÚBLICAS
 // ============================================
 
-// Obtener todos los terapeutas activos con filtros opcionales (PÚBLICO)
 export const getAllTherapistsPublic = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { specialty, location, language } = req.query;
+    const {
+      specialty,
+      category,
+      location,
+      locationType,
+      language,
+      sessionType,
+      focusArea,
+      slidingScale,
+      acceptsInsurance,
+      freeConsultation,
+      minExperience,
+      licensed
+    } = req.query;
 
-    // Construir query dinámicamente
     const query: any = { isActive: true };
 
-    if (specialty) {
-      query.specialty = specialty;
-    }
-
-    if (location) {
-      query.location = { $regex: location, $options: 'i' }; // Case-insensitive
-    }
-
-    if (language) {
-      query.language = { $in: [language] };
-    }
+    if (category) query.category = category;
+    if (specialty) query.specialty = specialty;
+    if (location) query.location = { $regex: location, $options: 'i' };
+    if (locationType) query.locationType = locationType;
+    if (language) query.language = { $in: [language] };
+    if (sessionType) query.sessionTypes = { $in: [sessionType] };
+    if (focusArea) query.focusAreas = { $in: [focusArea] };
+    if (slidingScale === 'true') query.slidingScale = true;
+    if (acceptsInsurance === 'true') query.acceptsInsurance = true;
+    if (freeConsultation === 'true') query.freeConsultation = true;
+    if (minExperience) query.yearsExperience = { $gte: parseInt(minExperience as string) };
+    if (licensed === 'true') query.licensedCertified = true;
 
     const therapists = await Therapist.find(query)
       .populate('userId', 'firstName lastName email')
-      .select('-nationalId') // Ocultar información sensible
+      .select('-nationalId')
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -46,7 +97,6 @@ export const getAllTherapistsPublic = async (req: AuthRequest, res: Response): P
   }
 };
 
-// Obtener un terapeuta por ID (PÚBLICO)
 export const getTherapistByIdPublic = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -77,27 +127,45 @@ export const getTherapistByIdPublic = async (req: AuthRequest, res: Response): P
 };
 
 // ============================================
-// RUTAS PROTEGIDAS - SOLO ADMIN
+// RUTAS PROTEGIDAS - ADMIN
 // ============================================
 
-// Crear un nuevo terapeuta (ADMIN)
 export const createTherapist = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { 
       email, 
       password, 
-      firstName, 
+      firstName,
       lastName,
       nationalId,
       specialty,
+      category,
+      additionalSpecialties,
       location,
+      locationType,
+      city,
+      state,
+      country,
       language,
       dateOfBirth,
-      profileImage,
-      bio
+      bio,
+      credentials,
+      yearsExperience,
+      certifications,
+      licensedCertified,
+      sessionTypes,
+      focusAreas,
+      hourlyRate,
+      slidingScale,
+      acceptsInsurance,
+      freeConsultation,
+      phone,
+      website
     } = req.body;
 
-    // Verificar que el admin está autenticado
+    // ✅ CAPTURAR IMAGEN SUBIDA
+    const profileImage = req.file ? `/uploads/therapists/${req.file.filename}` : undefined;
+
     if (req.user?.role !== 'admin') {
       res.status(403).json({ 
         success: false,
@@ -106,7 +174,6 @@ export const createTherapist = async (req: AuthRequest, res: Response): Promise<
       return;
     }
 
-    // Verificar si ya existe un usuario con ese email
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       res.status(400).json({ 
@@ -116,7 +183,6 @@ export const createTherapist = async (req: AuthRequest, res: Response): Promise<
       return;
     }
 
-    // Verificar si ya existe un terapeuta con ese nationalId
     const existingTherapist = await Therapist.findOne({ nationalId });
     if (existingTherapist) {
       res.status(400).json({ 
@@ -126,10 +192,9 @@ export const createTherapist = async (req: AuthRequest, res: Response): Promise<
       return;
     }
 
-    // 1. Crear el usuario primero
     const newUser = new User({
       email,
-      password, // El modelo User debe hashear esto automáticamente
+      password,
       firstName,
       lastName,
       role: 'therapist'
@@ -137,22 +202,39 @@ export const createTherapist = async (req: AuthRequest, res: Response): Promise<
 
     await newUser.save();
 
-    // 2. Crear el perfil de terapeuta
     const newTherapist = new Therapist({
       userId: newUser._id,
       nationalId,
       specialty,
+      category: category || null,
+      additionalSpecialties: additionalSpecialties || [],
       location,
+      locationType: locationType || null,
+      city,
+      state,
+      country: country || 'United States',
       language: Array.isArray(language) ? language : [language],
       dateOfBirth: new Date(dateOfBirth),
-      profileImage,
+      profileImage, // ✅ GUARDAR IMAGEN
       bio,
-      isActive: true
+      credentials,
+      yearsExperience: yearsExperience || undefined,
+      certifications: certifications || [],
+      licensedCertified: licensedCertified || false,
+      sessionTypes: sessionTypes || [],
+      focusAreas: focusAreas || [],
+      hourlyRate: hourlyRate || undefined,
+      slidingScale: slidingScale || false,
+      acceptsInsurance: acceptsInsurance || false,
+      freeConsultation: freeConsultation || false,
+      phone,
+      email,
+      website,
+      isActive: true,
+      isVerified: false
     });
 
     await newTherapist.save();
-
-    // Populate para devolver información completa
     await newTherapist.populate('userId', 'firstName lastName email role');
 
     res.status(201).json({
@@ -163,7 +245,6 @@ export const createTherapist = async (req: AuthRequest, res: Response): Promise<
   } catch (error: any) {
     console.error('Error al crear terapeuta:', error);
     
-    // Si hubo error en la validación de Mongoose
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map((err: any) => err.message);
       res.status(400).json({ 
@@ -181,7 +262,6 @@ export const createTherapist = async (req: AuthRequest, res: Response): Promise<
   }
 };
 
-// Obtener todos los terapeutas (ADMIN - incluye inactivos)
 export const getAllTherapistsAdmin = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     if (req.user?.role !== 'admin') {
@@ -210,11 +290,15 @@ export const getAllTherapistsAdmin = async (req: AuthRequest, res: Response): Pr
   }
 };
 
-// Actualizar terapeuta por ID (ADMIN)
 export const updateTherapist = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     const updateData = req.body;
+
+    // ✅ CAPTURAR IMAGEN SUBIDA
+    if (req.file) {
+      updateData.profileImage = `/uploads/therapists/${req.file.filename}`;
+    }
 
     if (req.user?.role !== 'admin') {
       res.status(403).json({ 
@@ -224,16 +308,13 @@ export const updateTherapist = async (req: AuthRequest, res: Response): Promise<
       return;
     }
 
-    // No permitir actualizar userId ni nationalId por seguridad
     delete updateData.userId;
     delete updateData.nationalId;
 
-    // Si se actualiza el idioma, asegurar que sea array
     if (updateData.language && !Array.isArray(updateData.language)) {
       updateData.language = [updateData.language];
     }
 
-    // Si se actualiza la fecha de nacimiento, convertir a Date
     if (updateData.dateOfBirth) {
       updateData.dateOfBirth = new Date(updateData.dateOfBirth);
     }
@@ -277,7 +358,6 @@ export const updateTherapist = async (req: AuthRequest, res: Response): Promise<
   }
 };
 
-// Eliminar terapeuta (ADMIN)
 export const deleteTherapist = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -300,13 +380,8 @@ export const deleteTherapist = async (req: AuthRequest, res: Response): Promise<
       return;
     }
 
-    // Soft delete: marcar como inactivo en lugar de eliminar
     therapist.isActive = false;
     await therapist.save();
-
-    // Si quieres hard delete (eliminar permanentemente):
-    // await Therapist.findByIdAndDelete(id);
-    // await User.findByIdAndDelete(therapist.userId);
 
     res.status(200).json({
       success: true,
@@ -321,7 +396,6 @@ export const deleteTherapist = async (req: AuthRequest, res: Response): Promise<
   }
 };
 
-// Reactivar terapeuta (ADMIN)
 export const reactivateTherapist = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -361,11 +435,90 @@ export const reactivateTherapist = async (req: AuthRequest, res: Response): Prom
   }
 };
 
+export const toggleTherapistStatus = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    if (req.user?.role !== 'admin') {
+      res.status(403).json({ 
+        success: false,
+        message: 'Acceso denegado' 
+      });
+      return;
+    }
+
+    const therapist = await Therapist.findById(id)
+      .populate('userId', 'firstName lastName email role');
+
+    if (!therapist) {
+      res.status(404).json({ 
+        success: false,
+        message: 'Terapeuta no encontrado' 
+      });
+      return;
+    }
+
+    therapist.isActive = !therapist.isActive;
+    await therapist.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Terapeuta ${therapist.isActive ? 'activado' : 'desactivado'} exitosamente`,
+      therapist
+    });
+  } catch (error) {
+    console.error('Error al cambiar estado del terapeuta:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error en el servidor' 
+    });
+  }
+};
+
+export const hardDeleteTherapist = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    if (req.user?.role !== 'admin') {
+      res.status(403).json({ 
+        success: false,
+        message: 'Acceso denegado' 
+      });
+      return;
+    }
+
+    const therapist = await Therapist.findById(id);
+
+    if (!therapist) {
+      res.status(404).json({ 
+        success: false,
+        message: 'Terapeuta no encontrado' 
+      });
+      return;
+    }
+
+    const userId = therapist.userId;
+
+    await Therapist.findByIdAndDelete(id);
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Terapeuta eliminado PERMANENTEMENTE de la base de datos'
+    });
+  } catch (error) {
+    console.error('Error al eliminar terapeuta permanentemente:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error en el servidor al eliminar terapeuta' 
+    });
+  }
+};
+
 // ============================================
-// RUTAS PROTEGIDAS - THERAPIST (propias)
+// RUTAS PROTEGIDAS - THERAPIST
 // ============================================
 
-// Obtener perfil del terapeuta autenticado
 export const getMyProfile = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const therapist = await Therapist.findOne({ userId: req.user?.userId })
@@ -392,10 +545,14 @@ export const getMyProfile = async (req: AuthRequest, res: Response): Promise<voi
   }
 };
 
-// Actualizar perfil del terapeuta autenticado
 export const updateMyProfile = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { specialty, location, language, dateOfBirth, bio, profileImage } = req.body;
+    const updateData = req.body;
+
+    // ✅ CAPTURAR IMAGEN SUBIDA
+    if (req.file) {
+      updateData.profileImage = `/uploads/therapists/${req.file.filename}`;
+    }
 
     const therapist = await Therapist.findOne({ userId: req.user?.userId });
 
@@ -407,13 +564,27 @@ export const updateMyProfile = async (req: AuthRequest, res: Response): Promise<
       return;
     }
 
-    // Actualizar solo los campos proporcionados
-    if (specialty) therapist.specialty = specialty;
-    if (location) therapist.location = location;
-    if (language) therapist.language = Array.isArray(language) ? language : [language];
-    if (dateOfBirth) therapist.dateOfBirth = new Date(dateOfBirth);
-    if (bio !== undefined) therapist.bio = bio;
-    if (profileImage !== undefined) therapist.profileImage = profileImage;
+    const allowedFields = [
+      'specialty', 'category', 'additionalSpecialties',
+      'location', 'locationType', 'city', 'state',
+      'language', 'dateOfBirth', 'bio', 'profileImage',
+      'credentials', 'yearsExperience', 'certifications', 'licensedCertified',
+      'sessionTypes', 'focusAreas',
+      'hourlyRate', 'slidingScale', 'acceptsInsurance', 'freeConsultation',
+      'phone', 'email', 'website'
+    ];
+
+    allowedFields.forEach(field => {
+      if (updateData[field] !== undefined) {
+        if (field === 'language' && !Array.isArray(updateData[field])) {
+          (therapist as any)[field] = [updateData[field]];
+        } else if (field === 'dateOfBirth') {
+          (therapist as any)[field] = new Date(updateData[field]);
+        } else {
+          (therapist as any)[field] = updateData[field];
+        }
+      }
+    });
 
     await therapist.save();
 

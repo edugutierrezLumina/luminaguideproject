@@ -1,4 +1,13 @@
+// frontend/src/components/therapist/TherapistDirectory.tsx
 import React, { useState, useEffect } from 'react';
+import { 
+  FunnelIcon, 
+  MapPinIcon, 
+  LanguageIcon,
+  XMarkIcon,
+  MagnifyingGlassIcon,
+  UserGroupIcon
+} from '@heroicons/react/24/outline';
 import TherapistCard from './TherapistCard';
 import TherapistModal from './TherapistModal';
 import './TherapistDirectory.css';
@@ -26,15 +35,11 @@ const TherapistDirectory: React.FC = () => {
   const [filteredTherapists, setFilteredTherapists] = useState<Therapist[]>([]);
   const [selectedTherapist, setSelectedTherapist] = useState<Therapist | null>(null);
   const [loading, setLoading] = useState(false);
-  
-  // Estados de filtros
   const [filters, setFilters] = useState({
     specialty: '',
     location: '',
     language: ''
   });
-
-  // Opciones dinámicas de filtros basadas en los terapeutas cargados
   const [filterOptions, setFilterOptions] = useState({
     specialties: [] as string[],
     locations: [] as string[],
@@ -52,36 +57,20 @@ const TherapistDirectory: React.FC = () => {
   const fetchTherapists = async () => {
     setLoading(true);
     try {
-      // ✅ Obtener URL del API desde variables de entorno
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-      const url = `${apiUrl}/therapists/public`;
-      
-      console.log('📡 Fetching therapists from:', url);
-      
-      const response = await fetch(url);
-      
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/therapists/public`);
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Therapists loaded:', data.therapists?.length || 0);
-        
-        setTherapists(data.therapists || []);
-        setFilteredTherapists(data.therapists || []);
-        extractFilterOptions(data.therapists || []);
-      } else {
-        console.error('❌ Response error:', response.status, response.statusText);
-        const errorData = await response.text();
-        console.error('Error details:', errorData);
+        setTherapists(data.therapists);
+        setFilteredTherapists(data.therapists);
+        extractFilterOptions(data.therapists);
       }
     } catch (error) {
-      console.error('❌ Error fetching therapists:', error);
-      console.error('💡 Make sure backend is running on http://localhost:8080');
-      console.error('💡 Check that VITE_API_URL is set correctly in .env');
+      console.error('Error fetching therapists:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Extraer opciones únicas para filtros dinámicos
   const extractFilterOptions = (therapistsList: Therapist[]) => {
     const specialties = [...new Set(therapistsList.map(t => t.specialty))];
     const locations = [...new Set(therapistsList.map(t => t.location))];
@@ -101,13 +90,9 @@ const TherapistDirectory: React.FC = () => {
     if (filters.specialty) {
       filtered = filtered.filter(t => t.specialty === filters.specialty);
     }
-
     if (filters.location) {
-      filtered = filtered.filter(t => 
-        t.location.toLowerCase().includes(filters.location.toLowerCase())
-      );
+      filtered = filtered.filter(t => t.location.toLowerCase().includes(filters.location.toLowerCase()));
     }
-
     if (filters.language) {
       filtered = filtered.filter(t => t.language.includes(filters.language));
     }
@@ -133,83 +118,92 @@ const TherapistDirectory: React.FC = () => {
 
   return (
     <div className="therapist-directory">
-      {/* Header del directorio */}
+      
+      {/* Header */}
       <div className="directory-hero">
-        <h1>Directorio de Terapeutas</h1>
-        <p>Encuentra al profesional ideal para tu bienestar</p>
+        <UserGroupIcon className="hero-icon" />
+        <h1>Therapist Directory</h1>
+        <p>Find the ideal professional for your well-being</p>
       </div>
 
-      {/* Sección de Filtros */}
+      {/* Filters Section */}
       <div className="filters-section">
         <div className="filters-container">
+          
+          {/* Specialty Filter */}
           <div className="filter-group">
             <label htmlFor="specialty-filter">
-              <i className="icon">🌿</i>
-              Especialidad
+              <FunnelIcon className="filter-icon" />
+              Specialty
             </label>
             <select
               id="specialty-filter"
               value={filters.specialty}
               onChange={(e) => handleFilterChange('specialty', e.target.value)}
             >
-              <option value="">Todas las especialidades</option>
+              <option value="">All specialties</option>
               {filterOptions.specialties.map(spec => (
                 <option key={spec} value={spec}>{spec}</option>
               ))}
             </select>
           </div>
 
+          {/* Location Filter */}
           <div className="filter-group">
             <label htmlFor="location-filter">
-              <i className="icon">📍</i>
-              Ciudad
+              <MapPinIcon className="filter-icon" />
+              City
             </label>
             <select
               id="location-filter"
               value={filters.location}
               onChange={(e) => handleFilterChange('location', e.target.value)}
             >
-              <option value="">Todas las ciudades</option>
+              <option value="">All cities</option>
               {filterOptions.locations.map(loc => (
                 <option key={loc} value={loc}>{loc}</option>
               ))}
             </select>
           </div>
 
+          {/* Language Filter */}
           <div className="filter-group">
             <label htmlFor="language-filter">
-              <i className="icon">💬</i>
-              Idioma
+              <LanguageIcon className="filter-icon" />
+              Language
             </label>
             <select
               id="language-filter"
               value={filters.language}
               onChange={(e) => handleFilterChange('language', e.target.value)}
             >
-              <option value="">Todos los idiomas</option>
+              <option value="">All languages</option>
               {filterOptions.languages.map(lang => (
                 <option key={lang} value={lang}>{lang}</option>
               ))}
             </select>
           </div>
 
+          {/* Clear Filters Button */}
           <button className="clear-filters-btn" onClick={clearFilters}>
-            Limpiar Filtros
+            <XMarkIcon className="btn-icon" />
+            Clear Filters
           </button>
         </div>
 
+        {/* Results Summary */}
         <div className="results-summary">
           <p>
-            <strong>{filteredTherapists.length}</strong> terapeuta{filteredTherapists.length !== 1 ? 's' : ''} encontrado{filteredTherapists.length !== 1 ? 's' : ''}
+            <strong>{filteredTherapists.length}</strong> therapist{filteredTherapists.length !== 1 ? 's' : ''} found
           </p>
         </div>
       </div>
 
-      {/* Grid de Cards */}
+      {/* Therapists Grid */}
       {loading ? (
         <div className="loading-container">
           <div className="spinner"></div>
-          <p>Cargando terapeutas...</p>
+          <p>Loading therapists...</p>
         </div>
       ) : filteredTherapists.length > 0 ? (
         <div className="therapists-grid">
@@ -223,18 +217,23 @@ const TherapistDirectory: React.FC = () => {
         </div>
       ) : (
         <div className="no-results">
-          <div className="no-results-icon">🔍</div>
-          <h3>No se encontraron terapeutas</h3>
-          <p>Intenta ajustar los filtros para ver más resultados</p>
+          <div className="no-results-icon">
+            <MagnifyingGlassIcon />
+          </div>
+          <h3>No therapists found</h3>
+          <p>Try adjusting the filters to see more results</p>
           <button onClick={clearFilters} className="try-again-btn">
-            Ver todos los terapeutas
+            View all therapists
           </button>
         </div>
       )}
 
-      {/* Modal de Perfil Completo */}
+      {/* Therapist Modal */}
       {selectedTherapist && (
-        <TherapistModal therapist={selectedTherapist} onClose={closeModal} />
+        <TherapistModal
+          therapist={selectedTherapist}
+          onClose={closeModal}
+        />
       )}
     </div>
   );

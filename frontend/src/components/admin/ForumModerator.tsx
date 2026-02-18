@@ -1,147 +1,242 @@
 import React, { useState, useEffect } from 'react';
+import { 
+  ClockIcon, 
+  CheckCircleIcon, 
+  XMarkIcon, 
+  TrashIcon,
+  UserIcon,
+  EnvelopeIcon,
+  CalendarIcon,
+  ChatBubbleLeftIcon,
+  TagIcon
+} from '@heroicons/react/24/outline';
 import { forumService } from '../../services/forumService';
 import type { ForumPost } from '../../services/forumService';
 import './ForumModerator.css';
 
 const ForumModerator: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'pending' | 'approved'>('pending');
   const [pendingPosts, setPendingPosts] = useState<ForumPost[]>([]);
   const [approvedPosts, setApprovedPosts] = useState<ForumPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'pending' | 'approved'>('pending');
 
   useEffect(() => {
-    loadPosts();
+    if (activeTab === 'pending') {
+      fetchPendingPosts();
+    } else {
+      fetchApprovedPosts();
+    }
   }, [activeTab]);
 
-  const loadPosts = async () => {
+  const fetchPendingPosts = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      if (activeTab === 'pending') {
-        const data = await forumService.getPending();
-        setPendingPosts(data);
-      } else {
-        const data = await forumService.getApproved();
-        setApprovedPosts(data);
-      }
+      const posts = await forumService.getPending();
+      console.log('✅ Pending posts loaded:', posts.length);
+      setPendingPosts(posts);
     } catch (error) {
-      console.error('Error loading forum posts:', error);
-      alert('Error al cargar posts del foro');
+      console.error('Error fetching pending posts:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleApprove = async (id: string) => {
+  const fetchApprovedPosts = async () => {
+    setLoading(true);
     try {
-      await forumService.approve(id);
-      alert('Post aprobado exitosamente');
-      loadPosts();
+      const posts = await forumService.getApproved();
+      console.log('✅ Approved posts loaded:', posts.length);
+      setApprovedPosts(posts);
     } catch (error) {
-      console.error('Error approving post:', error);
-      alert('Error al aprobar post');
+      console.error('Error fetching approved posts:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleReject = async (id: string) => {
-    if (!window.confirm('¿Estás seguro de rechazar este post?')) return;
-
+  const handleModerate = async (postId: string, action: 'approve' | 'reject') => {
     try {
-      await forumService.delete(id);
-      alert('Post rechazado y eliminado');
-      loadPosts();
+      await forumService.moderate(postId, action);
+      alert(`Pregunta ${action === 'approve' ? 'aprobada' : 'rechazada'} exitosamente`);
+      fetchPendingPosts();
     } catch (error) {
-      console.error('Error rejecting post:', error);
-      alert('Error al rechazar post');
+      console.error('Error moderating post:', error);
+      alert('Error al moderar la pregunta');
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('¿Estás seguro de eliminar este post aprobado?')) return;
+  const handleDelete = async (postId: string, isApproved: boolean = false) => {
+    if (!window.confirm('¿Estás seguro de eliminar esta pregunta?')) {
+      return;
+    }
 
     try {
-      await forumService.delete(id);
-      alert('Post eliminado exitosamente');
-      loadPosts();
+      await forumService.delete(postId);
+      alert('Pregunta eliminada');
+      
+      if (isApproved) {
+        fetchApprovedPosts();
+      } else {
+        fetchPendingPosts();
+      }
     } catch (error) {
       console.error('Error deleting post:', error);
-      alert('Error al eliminar post');
+      alert('Error al eliminar la pregunta');
     }
   };
 
-  const posts = activeTab === 'pending' ? pendingPosts : approvedPosts;
+  const formatDate = (date?: string) => {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
-  if (loading) return <div className="loading">Cargando...</div>;
+  const renderPost = (post: ForumPost, isPending: boolean = false) => (
+    <div key={post._id} className="pending-post-card">
+      <div className="post-header">
+        <div className="post-meta">
+          <span className="author">
+            <UserIcon className="icon-inline" />
+            {post.authorName}
+          </span>
+          {post.authorEmail && (
+            <span className="email">
+              <EnvelopeIcon className="icon-inline" />
+              {post.authorEmail}
+            </span>
+          )}
+          <span className="date">
+            <CalendarIcon className="icon-inline" />
+            {formatDate(post.createdAt)}
+          </span>
+        </div>
+        {post.category && (
+          <span className="category-tag">
+            <TagIcon className="icon-inline-small" />
+            {post.category}
+          </span>
+        )}
+      </div>
+
+      <h3 className="post-title">{post.title}</h3>
+      <p className="post-content">{post.content}</p>
+
+      {post.tags && post.tags.length > 0 && (
+        <div className="tags">
+          {post.tags.map((tag, idx) => (
+            <span key={idx} className="tag">
+              <TagIcon className="icon-inline-tiny" />
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {post.replies && post.replies.length > 0 && (
+        <div className="replies-preview">
+          <ChatBubbleLeftIcon className="icon-inline" />
+          <p className="replies-count">
+            {post.replies.length} Respuesta{post.replies.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+      )}
+
+      <div className="post-actions">
+        {isPending ? (
+          <>
+            <button
+              className="approve-btn"
+              onClick={() => post._id && handleModerate(post._id, 'approve')}
+            >
+              <CheckCircleIcon className="btn-icon" />
+              Aprobar
+            </button>
+            <button
+              className="reject-btn"
+              onClick={() => post._id && handleModerate(post._id, 'reject')}
+            >
+              <XMarkIcon className="btn-icon" />
+              Rechazar
+            </button>
+          </>
+        ) : null}
+        
+        <button
+          className="delete-btn"
+          onClick={() => post._id && handleDelete(post._id, !isPending)}
+        >
+          <TrashIcon className="btn-icon" />
+          Eliminar
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="forum-moderator">
-      <div className="manager-header">
-        <h1>Moderación de Foro</h1>
-        <div className="tabs">
-          <button
-            className={activeTab === 'pending' ? 'active' : ''}
-            onClick={() => setActiveTab('pending')}
-          >
-            Pendientes ({pendingPosts.length})
-          </button>
-          <button
-            className={activeTab === 'approved' ? 'active' : ''}
-            onClick={() => setActiveTab('approved')}
-          >
-            Aprobados ({approvedPosts.length})
-          </button>
+      <div className="moderator-header">
+        <h1>Moderación del Foro</h1>
+        <p>Gestiona las preguntas del foro</p>
+      </div>
+
+      {/* Tabs */}
+      <div className="moderator-tabs">
+        <button
+          className={`tab-btn ${activeTab === 'pending' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pending')}
+        >
+          <ClockIcon className="tab-icon" />
+          Pendientes ({pendingPosts.length})
+        </button>
+        <button
+          className={`tab-btn ${activeTab === 'approved' ? 'active' : ''}`}
+          onClick={() => setActiveTab('approved')}
+        >
+          <CheckCircleIcon className="tab-icon" />
+          Aprobadas ({approvedPosts.length})
+        </button>
+      </div>
+
+      {/* Contenido */}
+      {loading ? (
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Cargando preguntas...</p>
         </div>
-      </div>
-
-      <div className="forum-posts">
-        {posts.length === 0 ? (
-          <p className="no-data">
-            No hay posts {activeTab === 'pending' ? 'pendientes' : 'aprobados'}
-          </p>
-        ) : (
-          posts.map((post) => (
-            <div key={post._id} className="forum-post-card">
-              <div className="post-header">
-                <div>
-                  <h4>{post.authorName}</h4>
-                  <small>
-                    {new Date(post.createdAt!).toLocaleDateString('es-ES', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </small>
-                </div>
-                <span className={`status ${post.isApproved ? 'approved' : 'pending'}`}>
-                  {post.isApproved ? 'Aprobado' : 'Pendiente'}
-                </span>
+      ) : (
+        <>
+          {activeTab === 'pending' ? (
+            pendingPosts.length > 0 ? (
+              <div className="pending-posts-list">
+                {pendingPosts.map((post) => renderPost(post, true))}
               </div>
-
-              <div className="post-content">
-                <p>{post.content}</p>
+            ) : (
+              <div className="no-pending">
+                <CheckCircleIcon className="no-pending-icon" />
+                <h3>No hay preguntas pendientes</h3>
+                <p>Todas las preguntas han sido revisadas</p>
               </div>
-
-              <div className="post-actions">
-                {activeTab === 'pending' ? (
-                  <>
-                    <button onClick={() => handleApprove(post._id!)} className="btn-approve">
-                      ✓ Aprobar
-                    </button>
-                    <button onClick={() => handleReject(post._id!)} className="btn-reject">
-                      ✕ Rechazar
-                    </button>
-                  </>
-                ) : (
-                  <button onClick={() => handleDelete(post._id!)} className="btn-delete">
-                    Eliminar
-                  </button>
-                )}
+            )
+          ) : (
+            approvedPosts.length > 0 ? (
+              <div className="pending-posts-list">
+                {approvedPosts.map((post) => renderPost(post, false))}
               </div>
-            </div>
-          ))
-        )}
-      </div>
+            ) : (
+              <div className="no-pending">
+                <ChatBubbleLeftIcon className="no-pending-icon" />
+                <h3>No hay preguntas aprobadas</h3>
+                <p>Aprueba algunas preguntas para que aparezcan aquí</p>
+              </div>
+            )
+          )}
+        </>
+      )}
     </div>
   );
 };

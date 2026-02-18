@@ -217,3 +217,41 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ========================
+   HEROICONS STYLES
+   ======================== */
+
+.hero-icon {
+  width: 64px;
+  height: 64px;
+  color: #d094ea;
+  margin: 0 auto 20px;
+  stroke-width: 1.5;
+}
+
+.filter-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.no-results-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.no-results-icon svg {
+  width: 80px;
+  height: 80px;
+  color: #d094ea;
+  opacity: 0.5;
+  stroke-width: 1.5;
+}

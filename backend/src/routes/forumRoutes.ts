@@ -1,23 +1,30 @@
-import express from 'express';
-import {
+// backend/src/routes/forumRoutes.ts
+import { Router } from 'express';
+import { 
   createForumPost,
-  getPendingForumPosts,
-  getApprovedForumPosts,
-  approveForumPost,
-  deleteForumPost
+  getApprovedPosts,
+  getPostById,
+  addReply,
+  getPendingPosts,
+  moderatePost,
+  deletePost
 } from '../controllers/forumController';
-import { authenticate } from '../middleware/auth';
+import { auth } from '../middleware/auth';
 import { authorize } from '../middleware/authorize';
 
-const router = express.Router();
+const router = Router();
 
-// Rutas públicas
-router.post('/', createForumPost);
-router.get('/approved', getApprovedForumPosts);
 
-// Rutas protegidas (admin)
-router.get('/pending', authenticate, authorize('admin'), getPendingForumPosts);
-router.put('/:id/approve', authenticate, authorize('admin'), approveForumPost);
-router.delete('/:id', authenticate, authorize('admin'), deleteForumPost);
+router.post('/posts', createForumPost);           
+router.get('/posts', getApprovedPosts);           
+router.get('/posts/:id', getPostById);            
+
+
+router.post('/posts/:id/replies', auth, authorize('therapist'), addReply);
+
+
+router.get('/admin/posts/pending', auth, authorize('admin'), getPendingPosts);
+router.put('/admin/posts/:id/moderate', auth, authorize('admin'), moderatePost);
+router.delete('/admin/posts/:id', auth, authorize('admin'), deletePost);
 
 export default router;
