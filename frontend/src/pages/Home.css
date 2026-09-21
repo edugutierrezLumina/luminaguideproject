@@ -4,7 +4,6 @@
   font-family: 'Merriweather', serif;
 }
 
-
 /* ========================
    HERO SLIDER SECTION
    ======================== */
@@ -12,7 +11,6 @@
   background: linear-gradient(180deg, #ffffff 0%, #f8f4fb 100%);
   padding: 20px 0 60px 0;
 }
-
 
 /* ========================
    MISSION & VISION SECTION
@@ -68,7 +66,6 @@
   margin-bottom: 20px;
 }
 
-/* NUEVO - Estilos para Heroicons en Mission & Vision */
 .mission-vision-icon {
   width: 48px;
   height: 48px;
@@ -100,7 +97,6 @@
   font-weight: 300;
 }
 
-
 /* ========================
    NAVIGATION CARDS SECTION
    ======================== */
@@ -128,7 +124,7 @@
   position: relative;
   overflow: hidden;
   border: 2px solid transparent;
-  cursor: pointer; /* NUEVO - Hacer clickeable */
+  cursor: pointer;
 }
 
 .nav-card::before {
@@ -154,7 +150,7 @@
 }
 
 .card-icon {
-  display: flex; /* NUEVO - Centrar iconos */
+  display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
@@ -162,7 +158,6 @@
   transition: transform 0.3s ease;
 }
 
-/* NUEVO - Estilos para Heroicons en Navigation Cards */
 .nav-card-icon {
   width: 56px;
   height: 56px;
@@ -180,14 +175,9 @@
   filter: drop-shadow(0 4px 12px rgba(208, 148, 234, 0.4));
 }
 
-/* NUEVO - Animación de rebote para los iconos */
 @keyframes iconBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .nav-card:hover .card-icon {
@@ -222,6 +212,105 @@
   transform: translateX(10px);
 }
 
+/* ========================
+   DIRECTORY CTA SECTION
+   ======================== */
+.directory-cta-section {
+  padding: 80px 20px 120px;
+  background: linear-gradient(
+    135deg,
+    rgba(208, 148, 234, 0.55) 0%,
+    rgba(184, 109, 213, 0.55) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.directory-cta-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.cta-content h3 {
+  font-family: 'Merriweather', serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: #4a2060;
+  margin-bottom: 20px;
+}
+
+.cta-content p {
+  font-family: 'Merriweather', serif;
+  font-size: 18px;
+  color: #5a3070;
+  margin-bottom: 30px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.cta-email-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 40px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #b86dd5;
+  text-decoration: none;
+  border-radius: 50px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: 0 8px 24px rgba(184, 109, 213, 0.25);
+  transition: all 0.3s ease;
+  border: 2px solid rgba(208, 148, 234, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.cta-email-btn:hover {
+  background: white;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(184, 109, 213, 0.35);
+  color: #9a4fc0;
+}
+
+.cta-email-icon {
+  width: 22px;
+  height: 22px;
+  color: #b86dd5;
+  stroke-width: 1.8;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.cta-email-btn:hover .cta-email-icon {
+  transform: scale(1.15);
+}
+
+/* Responsive CTA */
+@media (max-width: 768px) {
+  .directory-cta-section {
+    padding: 60px 20px 100px;
+  }
+
+  .cta-content h3 {
+    font-size: 26px;
+  }
+
+  .cta-content p {
+    font-size: 16px;
+  }
+
+  .cta-email-btn {
+    padding: 14px 28px;
+    font-size: 15px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
 
 /* ========================
    RESPONSIVO
@@ -254,7 +343,6 @@
     font-size: 26px;
   }
 
-  /* Ajustar tamaño de iconos en móviles */
   .mission-vision-icon {
     width: 40px;
     height: 40px;
@@ -271,5 +359,24 @@
 
   .nav-card h4 {
     font-size: 20px;
+  }
+
+  .directory-cta-section {
+    padding: 60px 20px 100px;
+  }
+
+  .cta-content h3 {
+    font-size: 28px;
+  }
+
+  .cta-content p {
+    font-size: 16px;
+  }
+
+  .cta-email-btn {
+    padding: 16px 30px;
+    font-size: 16px;
+    flex-direction: column;
+    gap: 8px;
   }
 }

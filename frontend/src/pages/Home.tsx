@@ -6,7 +6,8 @@ import {
   DocumentTextIcon,
   QuestionMarkCircleIcon, 
   SparklesIcon, 
-  EyeIcon 
+  EyeIcon,
+  EnvelopeIcon
 } from '@heroicons/react/24/outline';
 import { useLanguage } from '../context/LanguageContext';
 import CardSlider from '../components/home/CardSlider';
@@ -51,7 +52,7 @@ const Home: React.FC = () => {
       <section className="navigation-cards-section">
         <div className="navigation-cards-container">
           
-          {/* Card 1: Directorio de Terapeutas */}
+          {/* Card 1: Directory */}
           <div className="nav-card" onClick={() => navigate('/therapists')}>
             <div className="card-icon">
               <UserGroupIcon className="nav-card-icon" />
@@ -71,7 +72,7 @@ const Home: React.FC = () => {
             <span className="card-arrow">→</span>
           </div>
 
-          {/* Card 3: Preguntas Frecuentes (FAQ) → Foro */}
+          {/* Card 3: FAQ → Forum */}
           <div className="nav-card" onClick={() => navigate('/forum')}>
             <div className="card-icon">
               <QuestionMarkCircleIcon className="nav-card-icon" />
@@ -83,6 +84,23 @@ const Home: React.FC = () => {
 
         </div>
       </section>
+
+      {/* CTA Directory */}
+        <section className="directory-cta-section">
+          <div className="directory-cta-container">
+            <div className="cta-content">
+              <h3>{t('home.cta.title')}</h3>
+              <p>{t('home.cta.text')}</p>
+              <a
+                href="mailto:camilaultreiacsllc@gmail.com"
+                className="cta-email-btn"
+              >
+                <EnvelopeIcon className="cta-email-icon" />
+                camilaultreiacsllc@gmail.com
+              </a>
+            </div>
+          </div>
+        </section>
 
     </div>
   );

@@ -63,6 +63,8 @@ const translations: TranslationDictionary = {
     'home.card.blog.desc': 'Lee artículos y participa en nuestra comunidad',
     'home.card.faq.title': 'Preguntas Frecuentes',
     'home.card.faq.desc': 'Encuentra respuestas a tus dudas más comunes',
+    'home.cta.title': '¿Quieres ser parte del directorio?',
+    'home.cta.text': 'Si quieres hacer parte del directorio, escribe un email a',
 
     // Therapist Manager
     'therapist.title': 'Gestión de Terapeutas',
@@ -161,6 +163,8 @@ const translations: TranslationDictionary = {
     'home.card.blog.desc': 'Read articles and participate in our community',
     'home.card.faq.title': 'Frequently Asked Questions',
     'home.card.faq.desc': 'Find answers to your most common questions',
+    'home.cta.title': 'Want to be part of our directory?',
+    'home.cta.text': 'If you want to be part of the directory, write an email to',
 
     // Therapist Manager
     'therapist.title': 'Therapist Management',
